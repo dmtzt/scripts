@@ -1,4 +1,12 @@
 @echo off
+if [%1]==[] (
+    call :usage
+    exit /b %errorlevel%
+)
+if [%2]==[] (
+    call :usage
+    exit /b %errorlevel%
+)
 set extension=%1
 set name=%2
 set extensions=cpp py
@@ -9,7 +17,8 @@ for %%a in (%extensions%) do (
         exit /b %errorlevel%
     )
 )     
-echo Extension not compatible with generator.
+echo %extension%: extension not supported by generator.
+call :usage
 exit /b %errorlevel%
 
 :: C++ template generator
@@ -56,6 +65,10 @@ if exist %name%.%extension% (
 call :file_created
 exit /b 0
 
+:usage
+echo Usage: new [name] [extension]
+exit /B 0
+
 :file_exists
 echo %name%.%extension% already exists.
 exit /b 0
@@ -64,6 +77,6 @@ exit /b 0
 if exist %name%.%extension% (
     echo %date% %time%: %name%.%extension% was created.
 ) else (
-    echo >> Error creating file.
+    echo > Error creating file.
 )
 exit /b 0
